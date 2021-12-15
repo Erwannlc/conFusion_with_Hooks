@@ -3,11 +3,10 @@ import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
 class Dishdetail extends Component {
 
-
-
     renderDish(dish) {
         if (dish != null) 
             return (
+                <div className="col-12 col-md-5">
                 <Card>
                     <CardImg top src={dish.image} alt={dish.name} />
                     <CardBody>
@@ -15,6 +14,7 @@ class Dishdetail extends Component {
                         <CardText>{dish.description}</CardText>
                     </CardBody>
                 </Card>
+                </div>
             );
 
         else 
@@ -28,8 +28,9 @@ class Dishdetail extends Component {
         if (dish != null ) {
 
            let comments = dish.comments.map((comment) => {
-               const date = new Date(Date.parse(comment.date)).toDateString();
-               
+            //    const date = new Date(Date.parse(comment.date)).toDateString();
+               const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)));
+              
                 return (
                     <CardBody  key={comment.id}>
                     <CardText>
@@ -41,9 +42,8 @@ class Dishdetail extends Component {
                 )
             });
 
-
             return (
-            <div>
+            <div className="col-12 col-md-5">
                 <CardTitle>Comments on {dish.name}</CardTitle>
                 {comments}
             </div>
@@ -59,18 +59,16 @@ class Dishdetail extends Component {
     render() {
 
         return (
+            <div className="container">
             <div className="row">
-            <div className="col-12 col-md-5">
-                {this.renderDish(this.props.selectedDish)}
-            </div>
-            <div className="col-12 col-md-5">
-                {this.renderDishComment(this.props.selectedDish)}
+                {this.renderDish(this.props.dish)}         
+                {this.renderDishComment(this.props.dish)}
             </div>
             </div>
             
 
-        )
-}
+        );
+    }
 
 
 
