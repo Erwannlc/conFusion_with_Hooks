@@ -3,49 +3,59 @@ import { Card, CardImg, CardText, CardBody, CardTitle } from 'reactstrap';
 
 class Dishdetail extends Component {
 
-    renderDish(dish) {
-        if (dish != null) 
-            return (
-                <div className="col-12 col-md-5">
-                <Card>
-                    <CardImg top src={dish.image} alt={dish.name} />
-                    <CardBody>
-                        <CardTitle>{dish.name}</CardTitle>
-                        <CardText>{dish.description}</CardText>
-                    </CardBody>
-                </Card>
-                </div>
-            );
-
-        else 
-            return (
-                <div></div>
-            );
-        
+    componentDidMount() {
+        console.log('Dishdetail componentDidMount invoked')
+    }
+    componentDidUpdate() {
+        console.log('Dishdetail componentDidUpdate invoked')
     }
 
-    renderDishComment(dish) {
-        if (dish != null ) {
+    renderDish(dish) {
 
-           let comments = dish.comments.map((comment) => {
+        return (
+            <div className="col-12 col-md-5 m-1">
+            <Card>
+                <CardImg top src={dish.image} alt={dish.name} />
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                </CardBody>
+            </Card>
+            </div>
+        )
+    }
+
+    renderDishComment(comments) {
+        if (comments != null ) {
+
+           comments = comments.map((comment) => {
             //    const date = new Date(Date.parse(comment.date)).toDateString();
                const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)));
               
                 return (
-                    <CardBody  key={comment.id}>
-                    <CardText>
-                        -- {comment.author}, {date}
-                    </CardText>
-                    <CardText>{comment.comment}</CardText>   
-                    </CardBody>
+                    <li  key={comment.id}>
+                    <p> -- {comment.author}, {date}</p>
+                    <p>{comment.comment}</p>   
+                    </li>
+
+                    // <CardBody  key={comment.id}>
+                    // <CardText>
+                    //     -- {comment.author}, {date}
+                    // </CardText>
+                    // <CardText>{comment.comment}</CardText>   
+                    // </CardBody>
 
                 )
             });
 
             return (
-            <div className="col-12 col-md-5">
-                <CardTitle>Comments on {dish.name}</CardTitle>
+            <div className="col-12 col-md-5 m-1">
+                <h4>Comments</h4>
+                <ul className="list-unstyled">
+                {/* <h4>Comments on {this.props.dish.name}</h4> */}
+                {/* <CardTitle>Comments on {dish.name}</CardTitle> */}
                 {comments}
+                </ul>
             </div>
             );
 
@@ -57,23 +67,20 @@ class Dishdetail extends Component {
     }
 
     render() {
-
-        return (
-            <div className="container">
-            <div className="row">
-                {this.renderDish(this.props.dish)}         
-                {this.renderDishComment(this.props.dish)}
-            </div>
-            </div>
-            
-
-        );
+        if (this.props.dish != null) 
+            return (
+                <div className="container">
+                <div className="row">
+                    {this.renderDish(this.props.dish)}         
+                    {this.renderDishComment(this.props.dish.comments)}
+                </div>
+                </div>
+            );
+        else 
+            return (
+                <div></div>
+            );
     }
-
-
-
-
-
 }
 
 export default Dishdetail;
