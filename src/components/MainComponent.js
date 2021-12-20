@@ -9,7 +9,7 @@ import { DISHES } from '../shared/dishes';
 import { COMMENTS } from '../shared/comments'; 
 import { LEADERS } from '../shared/leaders'; 
 import { PROMOTIONS } from '../shared/promotions'; 
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 
 class Main extends Component {
 
@@ -36,6 +36,39 @@ class Main extends Component {
       )
       
     }
+
+    // La version originale (du prof) avec l'ancien React router :
+    //
+        // const DishWithId = ({match}) => {
+        //   return(
+        //       <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
+        //         comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
+        //   );
+        // };
+
+
+      // Ma version avec useParams() :
+    //
+    // const DishWithId = () => {
+    //   let params = useParams();
+    //   return (
+    //     <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(params.dishId,10))[0]}
+    //     comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId,10))} />
+    //   );
+    // };
+
+      // Ma version alternative avec useParams() et .find() à la place de .filter() pour dish :
+    //
+    const DishWithId = () => {
+      let params = useParams();
+      return (
+        <Dishdetail dish={this.state.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId,10))} />
+      );
+    };
+
+
+
     return (
         <div>
             <Header />
@@ -45,8 +78,8 @@ class Main extends Component {
               <Route path="/home" element={HomePage()} />
               {/* component={() => <Menu dishes={this.state.dishes} />} devient element={<Menu dishes={this.state.dishes} />}  */}
               <Route exact path="/menu" element={<Menu dishes={this.state.dishes} />} />
+              <Route exact path="/menu/:dishId" element={<DishWithId />} /> 
               <Route exact path="/contactus" element={<Contact />} />
-
               {/* replace Redirect with Navigate */}
               <Route path="*" element={<Navigate to="/home" />} />
             </Routes>
