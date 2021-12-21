@@ -2,8 +2,7 @@ import React from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem  } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
-function RenderDish(dish) {
-    dish = dish.dish
+function RenderDish({dish}) {
     return (
         <div className="col-12 col-md-5 m-1">
         <Card>
@@ -17,10 +16,9 @@ function RenderDish(dish) {
     )
 }
 
-function RenderDishComment(comments) {
+function RenderDishComment({comments}) {
     if (comments != null ) {
-        comments = comments.comments
-
+        
         comments = comments.map((comment) => {
             //    const date = new Date(Date.parse(comment.date)).toDateString();
                const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)));

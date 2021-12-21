@@ -28,16 +28,18 @@ class Main extends Component {
   render () {
 
     const HomePage = () => {
+
+      const {dishes, leaders, promotions} = this.state
+
       return (
-        // choose the dish wich featured: true
+        // choose the dish wich featured: true 
         <Home 
-        dish={this.state.dishes.filter((dish) => dish.featured)[0]} 
-        leader={this.state.leaders.filter((leader) => leader.featured)[0]} 
-        promotion={this.state.promotions.filter((promo) => promo.featured)[0]} />
+        dish={dishes.find((dish) => dish.featured)} 
+        leader={leaders.find((leader) => leader.featured)} 
+        promotion={promotions.find((promo) => promo.featured)} />
       )
       
     }
-
     // La version originale (du prof) avec l'ancien React router :
     //
         // const DishWithId = ({match}) => {
@@ -46,7 +48,6 @@ class Main extends Component {
         //         comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
         //   );
         // };
-
 
       // Ma version avec useParams() :
     //
@@ -64,11 +65,9 @@ class Main extends Component {
       let params = useParams();
       return (
         <Dishdetail dish={this.state.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
-        comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId,10))} />
+        comments={this.state.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} />
       );
     };
-
-
 
     return (
         <div>
