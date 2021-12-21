@@ -6,30 +6,32 @@ import Dishdetail from './DishdetailComponent';
 import About from './AboutComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { DISHES } from '../shared/dishes'; 
-import { COMMENTS } from '../shared/comments'; 
-import { LEADERS } from '../shared/leaders'; 
-import { PROMOTIONS } from '../shared/promotions'; 
 import { Routes, Route, Navigate, useParams } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+const mapStateToProps = state => {
+    return {
+      dishes: state.dishes,
+      comments: state.comments,
+      promotions: state.promotions,
+      leaders: state.leaders
+    }
+}
+
 
 class Main extends Component {
 
   constructor(props) {
     super(props);
 
-    this.state = {
-        dishes: DISHES,
-        promotions: PROMOTIONS,
-        comments: COMMENTS,
-        leaders: LEADERS,
-    }; 
   }
 
+ 
   render () {
 
     const HomePage = () => {
 
-      const {dishes, leaders, promotions} = this.state
+      const {dishes, leaders, promotions} = this.props
 
       return (
         // choose the dish wich featured: true 
@@ -64,8 +66,8 @@ class Main extends Component {
     const DishWithId = () => {
       let params = useParams();
       return (
-        <Dishdetail dish={this.state.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
-        comments={this.state.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} />
+        <Dishdetail dish={this.props.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        comments={this.props.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} />
       );
     };
 
@@ -76,9 +78,9 @@ class Main extends Component {
             <Routes> 
               {/* dans Route, component devient element */}
               <Route path="/home" element={HomePage()} />
-              <Route path="/aboutus" element={<About leaders={this.state.leaders}/>} />
+              <Route path="/aboutus" element={<About leaders={this.props.leaders}/>} />
               {/* component={() => <Menu dishes={this.state.dishes} />} devient element={<Menu dishes={this.state.dishes} />}  */}
-              <Route exact path="/menu" element={<Menu dishes={this.state.dishes} />} />
+              <Route exact path="/menu" element={<Menu dishes={this.props.dishes} />} />
               <Route exact path="/menu/:dishId" element={<DishWithId />} /> 
               <Route exact path="/contactus" element={<Contact />} />
               {/* replace Redirect with Navigate */}
@@ -92,4 +94,5 @@ class Main extends Component {
   }
 }
 
-export default Main;
+// withRouter (from 'react-router-dom') est maintenant déprécié et inutile
+export default connect(mapStateToProps)(Main);
