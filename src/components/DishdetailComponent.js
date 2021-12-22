@@ -1,6 +1,7 @@
-import React from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem  } from 'reactstrap';
+import React, { Component } from 'react';
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader,Form, Label  } from 'reactstrap';
 import { Link } from 'react-router-dom';
+// import { render } from '@testing-library/react';
 
 function RenderDish({dish}) {
     return (
@@ -14,6 +15,48 @@ function RenderDish({dish}) {
         </Card>
         </div>
     )
+}
+
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isModalOpen: false
+        };
+        this.toggleModal = this.toggleModal.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+    } 
+
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        })
+    }
+
+    handleLogin(event) {
+        this.toggleModal()
+        alert("Username: " + this.username.value + "Password: " + this.password + " Remember: " + this.remember.checked)
+        event.preventDefault()
+    }
+
+    render() {
+        return(
+        <>
+        <Button outline onClick={this.toggleModal}><span className='fa fa-pencil fa-lg'></span>
+        {' '} Submit Comment
+        </Button>
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+            <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+            <ModalBody>
+                <Form>
+
+                    <Button type="submit" color='primary'>Submit</Button>
+                </Form>
+            </ModalBody>
+        </Modal>
+        </>
+        )
+    }
 }
 
 function RenderDishComment({comments}) {
@@ -37,15 +80,18 @@ function RenderDishComment({comments}) {
                 <ul className="list-unstyled">
                 {comments}
                 </ul>
+                <CommentForm />
             </div>
+            
             );
     
-        } else {
+    } else {
         return (
             <div></div>
         )
-    }
+    };
 }
+
 
 function Dishdetail(props) {
     if (props.dish != null) 
@@ -64,6 +110,8 @@ function Dishdetail(props) {
                 <div className="row">
                     <RenderDish dish={props.dish} />       
                     <RenderDishComment comments={props.comments} />
+                    
+                    
 
                 </div>
             </div>

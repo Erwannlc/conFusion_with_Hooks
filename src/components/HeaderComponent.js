@@ -68,7 +68,7 @@ class Header extends Component {
                 </Nav>
                 <Nav className='ms-auto' navbar>
                     <NavItem>
-                        <Button outine onClick={this.toggleModal}><span className='fa fa-sign-in fa-lg'></span>
+                        <Button outline onClick={this.toggleModal}><span className='fa fa-sign-in fa-lg'></span>
                          {' '} Login
                         </Button>
                     </NavItem>
