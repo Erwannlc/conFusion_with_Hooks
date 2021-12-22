@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Col, Row} from 'reactstrap';
-import { Formik, Form } from 'formik';
+import { Breadcrumb, BreadcrumbItem, Button, Label, Col, Row} from 'reactstrap';
+import { Formik, Field, Form, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
-import { FormsFormik } from './FormsWithFormik';
-
-
-const MyTextInput = FormsFormik.MyTextInput
-const MyTextArea = FormsFormik.MyTextArea
-const MyCheckbox = FormsFormik.MyCheckbox
-const MySelect = FormsFormik.MySelect
 
 const ContactLocalForm = () => {
-
     return(
         <Formik 
             initialValues={{
@@ -49,34 +41,68 @@ const ContactLocalForm = () => {
         >
 
             <Form>
-                <MyTextInput label="First Name" type="text" id="firstname" name="firstname" placeholder="First Name" />
-                <MyTextInput label="Last Name"  type="text" id="lastname" name="lastname" placeholder="Last Name"  />
-                <MyTextInput label="Contact Tel." type="tel" id="telnum" name="telnum" placeholder="Tel. Number" />
-                <MyTextInput label="Email"  type="email" id="email" name="email" placeholder="Email" />
+                <Row className="form-group"> 
+                <Label htmlFor="firstname" md={2}>First Name</Label>
+                <Col md={10}>
+                <Field type="text" id="firstname" name="firstname" placeholder="First Name" className="form-control"/>
+                <div className='invalid-feedback'><ErrorMessage name="firstname" /></div>
+                </Col>
+                </Row>
+
+                <Row className="form-group"> 
+                <Label htmlFor="lastname" md={2}>Last Name</Label>
+                <Col md={10}>
+                <Field type="text" id="lastname" name="lastname" placeholder="Last Name"  className="form-control"/>
+                <div className='error'><ErrorMessage className='error' name="lastname" /></div>
+                </Col>
+                </Row>
+
+                <Row className="form-group">
+                <Label htmlFor="telnum" md={2}>Contact Tel.</Label>
+                <Col md={10}>
+                <Field type="tel" id="telnum" name="telnum" placeholder="Tel. Number"  className="form-control" />
+                <div className='error'><ErrorMessage name="telnum" /></div>
+                </Col>
+                </Row> 
+
+                <Row className="form-group"> 
+                <Label htmlFor="email" md={2}>Email</Label>
+                <Col md={10}>
+                <Field type="email" id="email" name="email" placeholder="Email"  className="form-control"/>
+                <div className='error'><ErrorMessage name="email" /></div>
+                </Col>
+                </Row>
 
                 <Row className="form-group"> 
                     <Col md={{size: 6, offset: 2}}>
-                        <MyCheckbox name="agree"> {' '}
-                        <strong>May we contact you ?</strong>
-                        </MyCheckbox>
+                        <div className="form-check">
+                        <Label check>
+                            <Field type="checkbox" name="agree" className="form-check-input"/> {' '}
+                            <strong>May we contact you ?</strong>  
+                        </Label>
+                        </div>                         
                     </Col>
-
                     <Col md={{size: 3, offset: 1}}>
-                        <MySelect name="contactType">
+                        <Field as="select" name="contactType" className="form-control">
                             <option>Tel.</option>
                             <option>Email</option>
-                        </MySelect>
+                        </Field>                      
                     </Col>
                 </Row>
-
-            <MyTextArea label="Your Feedback" id="message" name="message" rows="12" />
-
-            <Row className='form-group'>
-                <Col md={{size: 10, offset: 2}}>
-                    <Button type="submit" color="primary">Send Feed Back
-                    </Button>            
+                
+                <Row className="form-group"> 
+                <Label htmlFor="message" md={2}>Your feedback</Label>
+                <Col md={10}>
+                    <Field as="textarea" id="message" name="message" rows="12" className="form-control" />
                 </Col>
-            </Row>
+                </Row>
+                
+                <Row className='form-group'>
+                    <Col md={{size: 10, offset: 2}}>
+                        <Button type="submit" color="primary">Send Feed Back
+                        </Button>            
+                    </Col>
+                </Row>
 
             </Form>
         </Formik>

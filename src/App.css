@@ -41,3 +41,17 @@ address {
 .card-title {
     font-weight: bold;
 }
+
+.form-group {
+    margin: 15px auto;
+}
+
+.error {
+    font-size: 12px;
+    color: #da2522;
+    margin-top: 0.25rem;
+}
+
+.invalid-feedback {
+    display: block;
+}
