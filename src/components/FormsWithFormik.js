@@ -66,8 +66,8 @@ export const FormsFormik = {
  MySelect: ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
-        <div>
-        {/* <label htmlFor={props.id || props.name}>{label}</label> */}
+        <div className='form-group'>
+        <Label htmlFor={props.id || props.name} md={2}>{label}</Label>
         <select {...field} {...props} className="form-control"/>
         {meta.touched && meta.error ? (
             <div className="error">{meta.error}</div>

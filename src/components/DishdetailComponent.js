@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader,Form, Label  } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader, Col, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { Formik, Form } from 'formik';
+import * as Yup from 'yup';
+import { FormsFormik } from './FormsWithFormik';
+
 // import { render } from '@testing-library/react';
 
 function RenderDish({dish}) {
@@ -40,18 +44,56 @@ class CommentForm extends Component {
     }
 
     render() {
+        const MyTextInput = FormsFormik.MyTextInput
+        const MyTextArea = FormsFormik.MyTextArea
+        const MySelect = FormsFormik.MySelect
+        
         return(
         <>
-        <Button outline onClick={this.toggleModal}><span className='fa fa-pencil fa-lg'></span>
+        
+        <Button outline onClick={this.toggleModal}>
+        <span className='fa fa-pencil fa-lg'></span>
         {' '} Submit Comment
         </Button>
+        
         <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
             <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
             <ModalBody>
+                <Formik
+                    initialValues={{
+                    rating: 1,
+                    author: '',
+                    comment: '',
+                    }}
+                    validationSchema={Yup.object({
+                        author: Yup.string()
+                        .max(15, "Your Name should be <= 15 characters")
+                        .min(3, "Your Name should be >= 3 characters")
+                        .required('Required'),
+                    })}
+                    onSubmit={(values, { setSubmitting }) => {
+                        console.log("Current state: " + JSON.stringify(values, null, 2));
+                        alert("Current state: " + JSON.stringify(values, null, 2));
+                        setSubmitting(false);
+                    }}
+                >
                 <Form>
+                <Col md={10}>
+                    <MySelect label="Rating" name="rating">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </MySelect>
+                    </Col>
+                    <MyTextInput label="Your Name" type="text" name="author" placeholder="Your Name"/>
+                    <MyTextArea label="Comment" name="comment" rows="6"/>
 
                     <Button type="submit" color='primary'>Submit</Button>
+                    
                 </Form>
+                </Formik>
             </ModalBody>
         </Modal>
         </>
@@ -80,7 +122,8 @@ function RenderDishComment({comments}) {
                 <ul className="list-unstyled">
                 {comments}
                 </ul>
-                <CommentForm />
+                <CommentForm/>
+                <p><br></br></p>
             </div>
             
             );
