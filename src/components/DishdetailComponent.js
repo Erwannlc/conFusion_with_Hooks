@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader, Col, Row } from 'reactstrap';
+import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader, Col, Row, Label } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -78,7 +78,7 @@ class CommentForm extends Component {
                     }}
                 >
                 <Form>
-                <Col md={10}>
+
                     <MySelect label="Rating" name="rating">
                         <option>1</option>
                         <option>2</option>
@@ -86,10 +86,8 @@ class CommentForm extends Component {
                         <option>4</option>
                         <option>5</option>
                     </MySelect>
-                    </Col>
                     <MyTextInput label="Your Name" type="text" name="author" placeholder="Your Name"/>
                     <MyTextArea label="Comment" name="comment" rows="6"/>
-
                     <Button type="submit" color='primary'>Submit</Button>
                     
                 </Form>

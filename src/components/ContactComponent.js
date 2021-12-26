@@ -49,10 +49,10 @@ const ContactLocalForm = () => {
         >
 
             <Form>
-                <MyTextInput label="First Name" type="text" id="firstname" name="firstname" placeholder="First Name" />
-                <MyTextInput label="Last Name"  type="text" id="lastname" name="lastname" placeholder="Last Name"  />
-                <MyTextInput label="Contact Tel." type="tel" id="telnum" name="telnum" placeholder="Tel. Number" />
-                <MyTextInput label="Email"  type="email" id="email" name="email" placeholder="Email" />
+                <MyTextInput label="First Name" md="2" type="text" id="firstname" name="firstname" placeholder="First Name" />
+                <MyTextInput label="Last Name"  md="2" type="text" id="lastname" name="lastname" placeholder="Last Name"  />
+                <MyTextInput label="Contact Tel." md="2" type="tel" id="telnum" name="telnum" placeholder="Tel. Number" />
+                <MyTextInput label="Email"  md="2" type="email" id="email" name="email" placeholder="Email" />
 
                 <Row className="form-group"> 
                     <Col md={{size: 6, offset: 2}}>
@@ -69,7 +69,7 @@ const ContactLocalForm = () => {
                     </Col>
                 </Row>
 
-            <MyTextArea label="Your Feedback" id="message" name="message" rows="12" />
+            <MyTextArea label="Your Feedback" md="2" id="message" name="message" rows="12" />
 
             <Row className='form-group'>
                 <Col md={{size: 10, offset: 2}}>

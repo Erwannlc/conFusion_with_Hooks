@@ -13,7 +13,7 @@ export const FormsFormik = {
     return (
       <>
         <Row className="form-group"> 
-        <Label htmlFor={props.id || props.name} md={2}>{label}</Label>
+        <Label htmlFor={props.id || props.name} md={props.md}>{label}</Label>
         <Col md={10}>
         <input className="form-control" {...field} {...props} />
         {meta.touched && meta.error ? (
@@ -32,7 +32,7 @@ export const FormsFormik = {
     return (
         <>
              <Row className="form-group"> 
-            <Label htmlFor={props.id || props.name} md={2}>{label}</Label>
+            <Label htmlFor={props.id || props.name} md={props.md}>{label}</Label>
             <Col md={10}>
             <textarea className="form-control" {...field} {...props} />
             {meta.touched && meta.error ? (
@@ -66,13 +66,15 @@ export const FormsFormik = {
  MySelect: ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
-        <div className='form-group'>
-        <Label htmlFor={props.id || props.name} md={2}>{label}</Label>
+        <Row className='form-group'>
+        <Label htmlFor={props.id || props.name} md={props.md}>{label}</Label>
+        <Col md={10}>
         <select {...field} {...props} className="form-control"/>
         {meta.touched && meta.error ? (
             <div className="error">{meta.error}</div>
         ) : null}
-        </div>
+        </Col>
+        </Row>
     );
 }
 
