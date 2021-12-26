@@ -72,9 +72,11 @@ class CommentForm extends Component {
                         .required('Required'),
                     })}
                     onSubmit={(values, { setSubmitting }) => {
-                        console.log("Current state: " + JSON.stringify(values, null, 2));
-                        alert("Current state: " + JSON.stringify(values, null, 2));
                         setSubmitting(false);
+                        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+                        console.log("dishId: " + this.props.dishId +"Current state: " + JSON.stringify(values, null, 2));
+                        // alert("Current state: " + JSON.stringify(values, null, 2));
+                        
                     }}
                 >
                 <Form>
@@ -99,7 +101,7 @@ class CommentForm extends Component {
     }
 }
 
-function RenderDishComment({comments}) {
+function RenderDishComment({comments, addComment, dishId}) {
     if (comments != null ) {
         
         comments = comments.map((comment) => {
@@ -120,7 +122,7 @@ function RenderDishComment({comments}) {
                 <ul className="list-unstyled">
                 {comments}
                 </ul>
-                <CommentForm/>
+                <CommentForm dishId={dishId} addComment={addComment}/>
                 <p><br></br></p>
             </div>
             
@@ -150,7 +152,9 @@ function Dishdetail(props) {
                 </div>
                 <div className="row">
                     <RenderDish dish={props.dish} />       
-                    <RenderDishComment comments={props.comments} />
+                    <RenderDishComment comments={props.comments}
+                    addComment={props.addComment}
+                    dishId={props.dish.id} />
                     
                     
 

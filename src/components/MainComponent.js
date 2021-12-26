@@ -8,6 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { addComment } from '../redux/ActionsCreators';
 
 const mapStateToProps = state => {
     return {
@@ -18,12 +19,11 @@ const mapStateToProps = state => {
     }
 }
 
+const mapDispatchToProps = dispatch => ({
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+});
+
 class Main extends Component {
-
-  constructor(props) {
-    super(props);
-
-  }
 
  
   render () {
@@ -66,7 +66,9 @@ class Main extends Component {
       let params = useParams();
       return (
         <Dishdetail dish={this.props.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
-        comments={this.props.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} />
+        comments={this.props.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} 
+          addComment={this.props.addComment}
+        />
       );
     };
 
@@ -94,4 +96,4 @@ class Main extends Component {
 }
 
 // withRouter (from 'react-router-dom') est maintenant déprécié et inutile
-export default connect(mapStateToProps)(Main);
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
