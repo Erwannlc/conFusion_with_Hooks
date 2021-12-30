@@ -8,7 +8,7 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { addComment } from '../redux/ActionsCreators';
+import { addComment, fetchDishes } from '../redux/ActionsCreators';
 
 const mapStateToProps = state => {
     return {
@@ -20,12 +20,16 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment))
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => {dispatch(fetchDishes())}
 });
 
 class Main extends Component {
 
- 
+ componentDidMount() {
+  this.props.fetchDishes();
+ }
+
   render () {
 
     const HomePage = () => {
@@ -35,7 +39,9 @@ class Main extends Component {
       return (
         // choose the dish wich featured: true 
         <Home 
-        dish={dishes.find((dish) => dish.featured)} 
+        dish={dishes.dishes.find((dish) => dish.featured)} 
+        dishesLoading={this.props.dishes.isLoading}
+        dishesErrMess={this.props.dishes.errMess}
         leader={leaders.find((leader) => leader.featured)} 
         promotion={promotions.find((promo) => promo.featured)} />
       )
@@ -65,7 +71,9 @@ class Main extends Component {
     const DishWithId = () => {
       let params = useParams();
       return (
-        <Dishdetail dish={this.props.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        <Dishdetail dish={this.props.dishes.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        isLoading={this.props.dishes.isLoading}
+        errMess={this.props.dishes.errMess}
         comments={this.props.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} 
           addComment={this.props.addComment}
         />
