@@ -5,6 +5,7 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { FormsFormik } from './FormsWithFormik';
 import { Loading } from './LoadingComponent';
+import { baseUrl } from '../shared/baseUrl';
 
 // import { render } from '@testing-library/react';
 
@@ -12,7 +13,7 @@ function RenderDish({dish}) {
     return (
         <div className="col-12 col-md-5 m-1">
         <Card>
-            <CardImg top src={dish.image} alt={dish.name} />
+            <CardImg top src={baseUrl + dish.image} alt={dish.name} />
             <CardBody>
                 <CardTitle>{dish.name}</CardTitle>
                 <CardText>{dish.description}</CardText>
