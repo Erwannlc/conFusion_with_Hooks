@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Button, Col, Row} from 'reactstrap';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { FormsFormik } from './FormsWithFormik';
+// import { postFeedback } from '../redux/ActionsCreators';
 
 
 const MyTextInput = FormsFormik.MyTextInput
@@ -11,7 +12,7 @@ const MyTextArea = FormsFormik.MyTextArea
 const MyCheckbox = FormsFormik.MyCheckbox
 const MySelect = FormsFormik.MySelect
 
-const ContactLocalForm = () => {
+const ContactForm = ({postFeedback}) => {
 
     return(
         <Formik 
@@ -24,6 +25,7 @@ const ContactLocalForm = () => {
             contactType: 'Tel.',
             message: '', 
             }}
+
             validationSchema={Yup.object({
                 firstname: Yup.string()
                 .max(10, "First Name should be <= 10 characters")
@@ -41,14 +43,20 @@ const ContactLocalForm = () => {
                 .email('Invalid email address')
                 .required('Required'),
             })}
-            onSubmit={(values, { setSubmitting }) => {
+
+            onSubmit={(values, { resetForm }) => {
                 console.log("Current state: " + JSON.stringify(values, null, 2));
                 alert("Current state: " + JSON.stringify(values, null, 2));
-                setSubmitting(false);
+                
+                postFeedback(values.firstname, values.lastname, values.telnum, values.email, values.agree, values.contactType, values.message);
+                // alert("Thank you for your feeback! \n" + feedback);
+                
+                resetForm();
             }}
         >
 
             <Form>
+                {/* <div>{feedback}</div> */}
                 <MyTextInput label="First Name" md="2" type="text" id="firstname" name="firstname" placeholder="First Name" />
                 <MyTextInput label="Last Name"  md="2" type="text" id="lastname" name="lastname" placeholder="Last Name"  />
                 <MyTextInput label="Contact Tel." md="2" type="tel" id="telnum" name="telnum" placeholder="Tel. Number" />
@@ -73,9 +81,12 @@ const ContactLocalForm = () => {
 
             <Row className='form-group'>
                 <Col md={{size: 10, offset: 2}}>
-                    <Button type="submit" color="primary">Send Feed Back
-                    </Button>            
+                    <Button type="submit" color="primary" className='me-md-3'>Send Feed Back
+                    </Button> 
+                    <Button outline type="reset">Cancel
+                    </Button>             
                 </Col>
+              
             </Row>
 
             </Form>
@@ -83,10 +94,8 @@ const ContactLocalForm = () => {
     )
 }
 
-class Contact extends Component {
-
-    render() {
-       
+function Contact (props) {
+      
     return(
         <div className="container">
             <div className='row'>
@@ -132,12 +141,12 @@ class Contact extends Component {
                     <h3>Send us your feedback</h3>
                 </div>
                 <div className='col-12 col-md-9'>
-                    <ContactLocalForm />     
+                    <ContactForm postFeedback={props.postFeedback}/>     
                 </div>
             </div>
         </div>
     );
-    }
+    
 }
 
 export default Contact;

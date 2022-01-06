@@ -8,22 +8,28 @@ import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import { Routes, Route, Navigate, useParams } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { postComment, fetchDishes, fetchComments, fetchPromos } from '../redux/ActionsCreators';
+import { postComment, postFeedback, fetchFeedbacks, fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionsCreators';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
 const mapStateToProps = state => {
     return {
       dishes: state.dishes,
       comments: state.comments,
       promotions: state.promotions,
-      leaders: state.leaders
+      leaders: state.leaders,
+      feedbacks: state.feedbacks
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-  postComment: (dishId, rating, author, comment) => dispatch(postComment(dishId, rating, author, comment)),
+  postComment: (...comment) => dispatch(postComment(...comment)),
   fetchDishes: () => {dispatch(fetchDishes())},
   fetchComments: () => {dispatch(fetchComments())},
-  fetchPromos: () => {dispatch(fetchPromos())}
+  fetchPromos: () => {dispatch(fetchPromos())},
+  fetchLeaders: () => {dispatch(fetchLeaders())},
+  postFeedback: (...feedback) => dispatch(postFeedback(...feedback)),
+  fetchFeedbacks: () => {dispatch(fetchFeedbacks())}
+  
 });
 
 class Main extends Component {
@@ -32,11 +38,14 @@ class Main extends Component {
   this.props.fetchDishes();
   this.props.fetchComments();
   this.props.fetchPromos();
-
+  this.props.fetchLeaders();
+  this.props.fetchFeedbacks();
  }
+ 
 
   render () {
 
+    
     const HomePage = () => {
 
       const {dishes, leaders, promotions} = this.props
@@ -50,7 +59,9 @@ class Main extends Component {
         promotion={promotions.promotions.find((promo) => promo.featured)} 
         promosLoading={promotions.isLoading}
         promosErrMess={promotions.errMess}
-        leader={leaders.find((leader) => leader.featured)} />
+        leader={leaders.leaders.find((leader) => leader.featured)} 
+        leadersLoading={leaders.isLoading}
+        leadersErrMess={leaders.errMess}/>
       )
       
     }
@@ -75,8 +86,12 @@ class Main extends Component {
 
       // Ma version alternative avec useParams() et .find() à la place de .filter() pour dish :
     //
+    
+
     const DishWithId = () => {
       let params = useParams();
+      
+      
       return (
         <Dishdetail dish={this.props.dishes.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
         isLoading={this.props.dishes.isLoading}
@@ -88,21 +103,36 @@ class Main extends Component {
       );
     };
 
+
+ 
+
     return (
+      
         <div>
             <Header />
-            {/* Switch devient Routes */}
-            <Routes> 
-              {/* dans Route, component devient element */}
-              <Route path="/home" element={HomePage()} />
-              <Route path="/aboutus" element={<About leaders={this.props.leaders}/>} />
-              {/* component={() => <Menu dishes={this.state.dishes} />} devient element={<Menu dishes={this.state.dishes} />}  */}
-              <Route exact path="/menu" element={<Menu dishes={this.props.dishes} />} />
-              <Route exact path="/menu/:dishId" element={<DishWithId />} /> 
-              <Route exact path="/contactus" element={<Contact />} />
-              {/* replace Redirect with Navigate */}
-              <Route path="*" element={<Navigate to="/home" />} />
-            </Routes>
+            <TransitionGroup>
+             
+              <CSSTransition classNames="page" timeout={300}>
+                          
+                {/* Switch devient Routes */}
+                <Routes> 
+                  {/* dans Route, component devient element */}
+                  <Route path="/home" element={HomePage()} />
+                  <Route path="/aboutus" element={<About leaders={this.props.leaders}/>} />
+                  {/* component={() => <Menu dishes={this.state.dishes} />} devient element={<Menu dishes={this.state.dishes} />}  */}
+                  <Route exact path="/menu" element={<Menu dishes={this.props.dishes} />} />
+                  <Route exact path="/menu/:dishId" element={<DishWithId />} /> 
+                  <Route exact path="/contactus" element={<Contact 
+                  postFeedback={this.props.postFeedback} 
+                  // feedback={JSON.stringify(this.props.feedbacks.feedbacks[this.props.feedbacks.feedbacks.length - 1])} 
+                  />} />
+
+                  {/* replace Redirect with Navigate */}
+                  <Route path="*" element={<Navigate to="/home" />} />
+                </Routes>
+              </CSSTransition>
+            
+            </TransitionGroup>
 
             <Footer />
 

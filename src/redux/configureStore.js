@@ -3,9 +3,10 @@ import { Dishes } from './dishes';
 import { Comments } from './comments';
 import { Promotions } from './promotions';
 import { Leaders } from './leaders';
+import { Feedbacks } from './feedbacks';
 import thunk from 'redux-thunk';
 import logger from 'redux-logger';
-import { InitialFeedBack } from './forms';
+// import { InitialFeedBack } from './forms';
 
 
 export const ConfigureStore = () => {
@@ -14,7 +15,8 @@ export const ConfigureStore = () => {
             dishes: Dishes,
             comments: Comments,
             promotions: Promotions,
-            leaders: Leaders
+            leaders: Leaders,
+            feedbacks: Feedbacks,
         }),
         applyMiddleware(thunk, logger)
     );
