@@ -32,6 +32,8 @@ const mapDispatchToProps = dispatch => ({
   
 });
 
+
+
 class Main extends Component {
 
  componentDidMount() {
@@ -44,7 +46,7 @@ class Main extends Component {
  
 
   render () {
-
+    
     
     const HomePage = () => {
 
@@ -110,12 +112,13 @@ class Main extends Component {
       
         <div>
             <Header />
-            <TransitionGroup>
+            <TransitionGroup component={null}> 
              
-              <CSSTransition classNames="page" timeout={300}>
+              {/* <CSSTransition  transitionName="page" classNames="page" timeout={300}> */}
+              <CSSTransition  transitionName="page" classNames="page" timeout={300}>
                           
                 {/* Switch devient Routes */}
-                <Routes> 
+                <Routes > 
                   {/* dans Route, component devient element */}
                   <Route path="/home" element={HomePage()} />
                   <Route path="/aboutus" element={<About leaders={this.props.leaders}/>} />

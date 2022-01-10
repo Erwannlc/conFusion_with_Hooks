@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Formik, Form } from 'formik';
@@ -6,7 +6,8 @@ import * as Yup from 'yup';
 import { FormsFormik } from './FormsWithFormik';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-import { useState } from 'react';
+
+// import { render } from '@testing-library/react';
 
 function RenderDish({dish}) {
     return (
@@ -22,66 +23,77 @@ function RenderDish({dish}) {
     )
 }
 
-function CommentForm (props) {
-    const [isModalOpen, setIsModalOpen] = useState(false)
-    const nodeRef = React.useRef(null);
-         
-    const MyTextInput = FormsFormik.MyTextInput
-    const MyTextArea = FormsFormik.MyTextArea
-    const MySelect = FormsFormik.MySelect
-    
-    return(
-    <>
-    
-    <Button outline onClick={() => setIsModalOpen(true)}>
-    <span className='fa fa-pencil fa-lg'></span>
-    {' '} Submit Comment
-    </Button>
-    
-    {/* nodeRef et ref (balise <Form>) sont là pour éviter le warning "findDOMNode is deprecated in StrictMode" cf. https://www.kindacode.com/article/react-warning-finddomnode-is-deprecated-in-strictmode/ */}
-    <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} nodeRef={nodeRef}> 
-        <ModalHeader toggle={() => setIsModalOpen(false)} >Submit Comment</ModalHeader>
-        <ModalBody>
-            <Formik
-                initialValues={{
-                rating: 1,
-                author: '',
-                comment: '',
-                }}
-                validationSchema={Yup.object({
-                    author: Yup.string()
-                    .max(15, "Your Name should be <= 15 characters")
-                    .min(3, "Your Name should be >= 3 characters")
-                    .required('Required'),
-                })}
-                onSubmit={(values, { setSubmitting }) => {
-                    setSubmitting(false);
-                    props.postComment(props.dishId, values.rating, values.author, values.comment);
-                    console.log("dishId: " + props.dishId +"Current state: " + JSON.stringify(values, null, 2))
-                }}
-                
-                
-            >
-            <Form ref={nodeRef}>
+class CommentForm extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            isModalOpen: false
+        };
+        this.toggleModal = this.toggleModal.bind(this);
+    } 
 
-                <MySelect label="Rating" name="rating">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                </MySelect>
-                <MyTextInput label="Your Name" type="text" name="author" placeholder="Your Name"/>
-                <MyTextArea label="Comment" name="comment" rows="6"/>
-                <Button type="submit" color='primary'>Submit</Button>
-                
-            </Form>
-            </Formik>
-        </ModalBody>
-    </Modal>
-    </>
-    )
-    
+    toggleModal() {
+        this.setState({
+            isModalOpen: !this.state.isModalOpen
+        })
+    }
+
+    render() {
+        const MyTextInput = FormsFormik.MyTextInput
+        const MyTextArea = FormsFormik.MyTextArea
+        const MySelect = FormsFormik.MySelect
+        
+        return(
+        <>
+        
+        <Button outline onClick={this.toggleModal}>
+        <span className='fa fa-pencil fa-lg'></span>
+        {' '} Submit Comment
+        </Button>
+        
+        <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
+            <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
+            <ModalBody>
+                <Formik
+                    initialValues={{
+                    rating: 1,
+                    author: '',
+                    comment: '',
+                    }}
+                    validationSchema={Yup.object({
+                        author: Yup.string()
+                        .max(15, "Your Name should be <= 15 characters")
+                        .min(3, "Your Name should be >= 3 characters")
+                        .required('Required'),
+                    })}
+                    onSubmit={(values, { setSubmitting }) => {
+                        setSubmitting(false);
+                        this.props.postComment(this.props.dishId, values.rating, values.author, values.comment);
+                        console.log("dishId: " + this.props.dishId +"Current state: " + JSON.stringify(values, null, 2));
+                        // alert("Current state: " + JSON.stringify(values, null, 2));
+                        
+                    }}
+                >
+                <Form>
+
+                    <MySelect label="Rating" name="rating">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </MySelect>
+                    <MyTextInput label="Your Name" type="text" name="author" placeholder="Your Name"/>
+                    <MyTextArea label="Comment" name="comment" rows="6"/>
+                    <Button type="submit" color='primary'>Submit</Button>
+                    
+                </Form>
+                </Formik>
+            </ModalBody>
+        </Modal>
+        </>
+        )
+    }
 }
 
 function RenderDishComment({comments, postComment, dishId}) {

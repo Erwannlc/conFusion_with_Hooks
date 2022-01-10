@@ -4,7 +4,6 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { Link } from 'react-router-dom';
 import { FormsFormik } from './FormsWithFormik';
-// import { postFeedback } from '../redux/ActionsCreators';
 
 
 const MyTextInput = FormsFormik.MyTextInput
