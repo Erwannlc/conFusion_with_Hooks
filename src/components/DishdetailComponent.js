@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Formik, Form } from 'formik';
@@ -6,7 +6,7 @@ import * as Yup from 'yup';
 import { FormsFormik } from './FormsWithFormik';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
-import { useState } from 'react';
+
 
 function RenderDish({dish}) {
     return (
@@ -24,7 +24,6 @@ function RenderDish({dish}) {
 
 function CommentForm (props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
-    const nodeRef = React.useRef(null);
          
     const MyTextInput = FormsFormik.MyTextInput
     const MyTextArea = FormsFormik.MyTextArea
@@ -38,8 +37,8 @@ function CommentForm (props) {
     {' '} Submit Comment
     </Button>
     
-    {/* nodeRef et ref (balise <Form>) sont là pour éviter le warning "findDOMNode is deprecated in StrictMode" cf. https://www.kindacode.com/article/react-warning-finddomnode-is-deprecated-in-strictmode/ */}
-    <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} nodeRef={nodeRef}> 
+    {/* nodeRef et ref (balise <Form>) sont là pour éviter le warning "findDOMNode is deprecated in StrictMode" dû à reactstrap sans doute cf. https://www.kindacode.com/article/react-warning-finddomnode-is-deprecated-in-strictmode/ */}
+    <Modal isOpen={isModalOpen} toggle={() => setIsModalOpen(false)} > 
         <ModalHeader toggle={() => setIsModalOpen(false)} >Submit Comment</ModalHeader>
         <ModalBody>
             <Formik
@@ -62,7 +61,7 @@ function CommentForm (props) {
                 
                 
             >
-            <Form ref={nodeRef}>
+            <Form>
 
                 <MySelect label="Rating" name="rating">
                     <option>1</option>

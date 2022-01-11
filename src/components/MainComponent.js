@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import Home from './HomeComponent';
 import Menu from './MenuComponent';
 import Contact from './ContactComponent';
@@ -6,52 +6,32 @@ import Dishdetail from './DishdetailComponent';
 import About from './AboutComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
-import { Routes, Route, Navigate, useParams } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { Routes, Route, Navigate, useParams, useLocation } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 import { postComment, postFeedback, fetchFeedbacks, fetchDishes, fetchComments, fetchPromos, fetchLeaders } from '../redux/ActionsCreators';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-const mapStateToProps = state => {
-    return {
-      dishes: state.dishes,
-      comments: state.comments,
-      promotions: state.promotions,
-      leaders: state.leaders,
-      feedbacks: state.feedbacks
-    }
-}
-
-const mapDispatchToProps = dispatch => ({
-  postComment: (...comment) => dispatch(postComment(...comment)),
-  fetchDishes: () => {dispatch(fetchDishes())},
-  fetchComments: () => {dispatch(fetchComments())},
-  fetchPromos: () => {dispatch(fetchPromos())},
-  fetchLeaders: () => {dispatch(fetchLeaders())},
-  postFeedback: (...feedback) => dispatch(postFeedback(...feedback)),
-  fetchFeedbacks: () => {dispatch(fetchFeedbacks())}
-  
-});
 
 
+function Main () {
 
-class Main extends Component {
+  const dishes = useSelector((state) => state.dishes)
+  const comments = useSelector((state) => state.comments)
+  const leaders = useSelector((state) => state.leaders)
+  const promotions = useSelector((state) => state.promotions)
+  // const feedbacks = useSelector((state) => state.feedbacks)
 
- componentDidMount() {
-  this.props.fetchDishes();
-  this.props.fetchComments();
-  this.props.fetchPromos();
-  this.props.fetchLeaders();
-  this.props.fetchFeedbacks();
- }
- 
+  const dispatch = useDispatch();
 
-  render () {
-    
-    
-    const HomePage = () => {
-
-      const {dishes, leaders, promotions} = this.props
-
+   useEffect(() => {
+    dispatch(fetchDishes());
+    dispatch(fetchComments());
+    dispatch(fetchPromos());
+    dispatch(fetchLeaders());
+    dispatch(fetchFeedbacks());
+  }, [dispatch])
+      
+  const HomePage = () => {
       return (
         // choose the dish wich featured: true 
         <Home 
@@ -64,73 +44,42 @@ class Main extends Component {
         leader={leaders.leaders.find((leader) => leader.featured)} 
         leadersLoading={leaders.isLoading}
         leadersErrMess={leaders.errMess}/>
-      )
-      
-    }
-    // La version originale (du prof) avec l'ancien React router :
-    //
-        // const DishWithId = ({match}) => {
-        //   return(
-        //       <DishDetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(match.params.dishId,10))[0]} 
-        //         comments={this.state.comments.filter((comment) => comment.dishId === parseInt(match.params.dishId,10))} />
-        //   );
-        // };
-
-      // Ma version avec useParams() :
-    //
-    // const DishWithId = () => {
-    //   let params = useParams();
-    //   return (
-    //     <Dishdetail dish={this.state.dishes.filter((dish) => dish.id === parseInt(params.dishId,10))[0]}
-    //     comments={this.state.comments.filter((comment) => comment.dishId === parseInt(params.dishId,10))} />
-    //   );
-    // };
-
-      // Ma version alternative avec useParams() et .find() à la place de .filter() pour dish :
-    //
-    
+      ) 
+    }     
 
     const DishWithId = () => {
       let params = useParams();
       
       
       return (
-        <Dishdetail dish={this.props.dishes.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
-        isLoading={this.props.dishes.isLoading}
-        errMess={this.props.dishes.errMess}
-        comments={this.props.comments.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} 
-        commentsErrMess={this.props.comments.errMess}
-          postComment={this.props.postComment}
+        <Dishdetail dish={dishes.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        isLoading={dishes.isLoading}
+        errMess={dishes.errMess}
+        comments={comments.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} 
+        commentsErrMess={comments.errMess}
+        postComment={(...comment) => dispatch(postComment(...comment))}
         />
       );
     };
 
-
- 
+    const location = useLocation();
 
     return (
       
         <div>
             <Header />
-            <TransitionGroup component={null}> 
-             
-              {/* <CSSTransition  transitionName="page" classNames="page" timeout={300}> */}
-              <CSSTransition  transitionName="page" classNames="page" timeout={300}>
+            <TransitionGroup> 
+              <CSSTransition key={location.key} classNames="page" timeout={1000}>
                           
-                {/* Switch devient Routes */}
                 <Routes > 
-                  {/* dans Route, component devient element */}
                   <Route path="/home" element={HomePage()} />
-                  <Route path="/aboutus" element={<About leaders={this.props.leaders}/>} />
-                  {/* component={() => <Menu dishes={this.state.dishes} />} devient element={<Menu dishes={this.state.dishes} />}  */}
-                  <Route exact path="/menu" element={<Menu dishes={this.props.dishes} />} />
+                  <Route path="/aboutus" element={<About leaders={leaders}/>} />
+                  <Route exact path="/menu" element={<Menu dishes={dishes} />} />
                   <Route exact path="/menu/:dishId" element={<DishWithId />} /> 
                   <Route exact path="/contactus" element={<Contact 
-                  postFeedback={this.props.postFeedback} 
+                  postFeedback={(...feedback) => dispatch(postFeedback(...feedback))} 
                   // feedback={JSON.stringify(this.props.feedbacks.feedbacks[this.props.feedbacks.feedbacks.length - 1])} 
                   />} />
-
-                  {/* replace Redirect with Navigate */}
                   <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
               </CSSTransition>
@@ -141,8 +90,7 @@ class Main extends Component {
 
         </div>
     );
-  }
+  
 }
 
-// withRouter (from 'react-router-dom') est maintenant déprécié et inutile
-export default connect(mapStateToProps, mapDispatchToProps)(Main);
+export default Main;
