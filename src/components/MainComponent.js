@@ -52,10 +52,10 @@ function Main () {
       
       
       return (
-        <Dishdetail dish={dishes.dishes.find(dish => dish.id === parseInt(params.dishId,10))}
+        <Dishdetail dish={dishes.dishes.find(dish => dish.id === Number(params.dishId))}
         isLoading={dishes.isLoading}
         errMess={dishes.errMess}
-        comments={comments.comments.filter(comment => comment.dishId === parseInt(params.dishId,10))} 
+        comments={comments.comments.filter(comment => comment.dishId === Number(params.dishId))} 
         commentsErrMess={comments.errMess}
         postComment={(...comment) => dispatch(postComment(...comment))}
         />

@@ -24,6 +24,7 @@ function RenderDish({dish}) {
 
 function CommentForm (props) {
     const [isModalOpen, setIsModalOpen] = useState(false)
+    const [isDisabled, setIsDisabled] = useState(false)
          
     const MyTextInput = FormsFormik.MyTextInput
     const MyTextArea = FormsFormik.MyTextArea
@@ -56,7 +57,8 @@ function CommentForm (props) {
                 onSubmit={(values, { setSubmitting }) => {
                     setSubmitting(false);
                     props.postComment(props.dishId, values.rating, values.author, values.comment);
-                    console.log("dishId: " + props.dishId +"Current state: " + JSON.stringify(values, null, 2))
+                    console.log("dishId: " + props.dishId +"Current state: " + JSON.stringify(values, null, 2));
+                    setIsDisabled(true)
                 }}
                 
                 
@@ -72,7 +74,7 @@ function CommentForm (props) {
                 </MySelect>
                 <MyTextInput label="Your Name" type="text" name="author" placeholder="Your Name"/>
                 <MyTextArea label="Comment" name="comment" rows="6"/>
-                <Button type="submit" color='primary'>Submit</Button>
+                <Button type="submit" color='primary' disabled={isDisabled}>Submit</Button>
                 
             </Form>
             </Formik>
