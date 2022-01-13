@@ -83,7 +83,6 @@ function Main () {
                   <Route path="*" element={<Navigate to="/home" />} />
                 </Routes>
               </CSSTransition>
-            
             </TransitionGroup>
 
             <Footer />

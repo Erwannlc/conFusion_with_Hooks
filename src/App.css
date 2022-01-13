@@ -81,14 +81,40 @@ address {
 .card-enter,
 .card-appear {
     opacity: 0.01;
-    transform: scale(0.5) translateY(-50px);
+    transform: scale(0.5) translateY(-50%);
     -webkit-transform: scale(0.5) translateY(-50%);
 }
 
 .card-enter-active,
 .card-appear-active {
     opacity: 1;
-    transform: scale(1) translateY(0%) translateY(-50px);
+    transform: scale(1) translateY(0%);
     -webkit-transform: scale(1) translateY(0%);
     transition: all 300ms ease-in;
+}
+
+.leaders-enter,
+.leaders-appear {
+    opacity: 0.01;
+    transform: translateX(-100%);
+}
+
+.leaders-enter-active,
+.leaders-appear-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 300ms linear;
+}
+
+.comments-enter,
+.comments-appear {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.comments-enter-active,
+.comments-appear-active {
+    opacity: 1;
+    transform: translateX(0);
+    transition: all 300ms ease-out;
 }

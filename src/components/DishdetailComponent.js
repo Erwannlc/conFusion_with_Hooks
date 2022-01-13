@@ -6,18 +6,22 @@ import * as Yup from 'yup';
 import { FormsFormik } from './FormsWithFormik';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import {  CSSTransition } from 'react-transition-group';
+
 
 
 function RenderDish({dish}) {
     return (
         <div className="col-12 col-md-5 m-1">
-        <Card>
-            <CardImg top src={baseUrl + dish.image} alt={dish.name} />
-            <CardBody>
-                <CardTitle>{dish.name}</CardTitle>
-                <CardText>{dish.description}</CardText>
-            </CardBody>
-        </Card>
+         <CSSTransition in={true} classNames="card" timeout={300} appear>
+            <Card>
+                <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                <CardBody>
+                    <CardTitle>{dish.name}</CardTitle>
+                    <CardText>{dish.description}</CardText>
+                </CardBody>
+            </Card>
+        </CSSTransition>
         </div>
     )
 }
@@ -88,19 +92,22 @@ function CommentForm (props) {
 function RenderDishComment({comments, postComment, dishId}) {
     if (comments != null ) {
         
-        comments = comments.map((comment) => {
+        comments = comments.map((comment, i) => {
             //    const date = new Date(Date.parse(comment.date)).toDateString();
                const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)));
               
                 return (
-                    <li  key={comment.id}>
-                    <p> -- {comment.author}, {date}</p>
-                    <p>{comment.comment}</p>   
-                    </li>
+                    <CSSTransition in={true} classNames="comments" timeout={2000} appear>
+                        <li  key={comment.id} style={{transitionDelay: `${100 * i}ms`}}>
+                        <p> -- {comment.author}, {date}</p>
+                        <p>{comment.comment}</p>   
+                        </li>
+                    </CSSTransition>
                 )
             });
     
             return (
+                
             <div className="col-12 col-md-5 m-1">
                 <h4>Comments</h4>
                 <ul className="list-unstyled">

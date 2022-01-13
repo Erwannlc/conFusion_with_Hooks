@@ -2,30 +2,33 @@ import React from 'react';
 import { Breadcrumb, BreadcrumbItem, Card, CardBody, CardHeader, Media } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl'
+import {  CSSTransition } from 'react-transition-group';
 
 
-function RenderLeader({leader}) {
+function RenderLeader ({leader}) {
     return(
         <div key={leader.id} className="col-12 mt-4">
-        <Media className='d-flex'>
-            <Media className='flex-shrink-0'>
-                <Media object src={baseUrl + leader.image} alt={leader.name} />
+        <CSSTransition in={true} classNames="leaders" timeout={1000} appear>
+            <Media className='d-flex' style={{transitionDelay: `${150 * leader.id}ms`}}>
+                <Media className='flex-shrink-0'>
+                    <Media object src={baseUrl + leader.image} alt={leader.name} />
+                </Media>
+                <Media body className="flex-grow-1 ms-5">
+                    <Media heading>{leader.name}</Media>
+                    <p>{leader.designation}</p>
+                    <p>{leader.description}</p>
+                </Media>
             </Media>
-            <Media body className="flex-grow-1 ms-5">
-                <Media heading>{leader.name}</Media>
-                <p>{leader.designation}</p>
-                <p>{leader.description}</p>
-            </Media>
-        </Media>
+       </CSSTransition>
     </div>
     )
 }
 
-function About(props) {
+// const RenderLeaderStaggered =  setTimeout(RenderLeader, 200)
 
+function About(props) {
     const leaders = props.leaders.leaders.map((leader) => {
-        
-        return (
+        return (           
             <RenderLeader key={leader.id} leader={leader}/>
         );
     });
