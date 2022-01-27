@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Card, CardImg, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle, Breadcrumb, BreadcrumbItem , Button, Modal, ModalBody, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
@@ -10,12 +10,21 @@ import {  CSSTransition } from 'react-transition-group';
 
 
 
-function RenderDish({dish}) {
+function RenderDish({dish, favorite, postFavorite}) {
     return (
         <div className="col-12 col-md-5 m-1">
          <CSSTransition in={true} classNames="card" timeout={300} appear>
             <Card>
                 <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                    <CardImgOverlay>
+                        <Button outline color="primary" onClick={() => favorite ? console.log('Already favorite') : postFavorite(dish._id)}>
+                            {favorite ?
+                                <span className="fa fa-heart"></span>
+                                : 
+                                <span className="fa fa-heart-o"></span>
+                            }
+                        </Button>
+                    </CardImgOverlay>
                 <CardBody>
                     <CardTitle>{dish.name}</CardTitle>
                     <CardText>{dish.description}</CardText>
@@ -94,13 +103,14 @@ function RenderDishComment({comments, postComment, dishId}) {
         
         comments = comments.map((comment, i) => {
             //    const date = new Date(Date.parse(comment.date)).toDateString();
-               const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)));
+               const date = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.updatedAt)));
               
                 return (
-                    <CSSTransition in={true} classNames="comments" timeout={2000} appear>
-                        <li  key={comment.id} style={{transitionDelay: `${100 * i}ms`}}>
-                        <p> -- {comment.author}, {date}</p>
+                    <CSSTransition in={true} classNames="comments" appear>
+                        <li  key={comment._id} style={{transitionDelay: `${200 * i}ms`}}>
                         <p>{comment.comment}</p>   
+                        <p>{comment.rating} stars</p>   
+                        <p> -- {comment.author.firstname} {comment.author.lastname} , {date}</p>
                         </li>
                     </CSSTransition>
                 )
@@ -160,13 +170,10 @@ function Dishdetail(props) {
                     </div>
                 </div>
                 <div className="row">
-                    <RenderDish dish={props.dish} />       
+                    <RenderDish dish={props.dish} favorite={props.favorite} postFavorite={props.postFavorite} />       
                     <RenderDishComment comments={props.comments}
                     postComment={props.postComment}
-                    dishId={props.dish.id} />
-                    
-                    
-
+                    dishId={props.dish._id} />
                 </div>
             </div>
         );
@@ -175,9 +182,6 @@ function Dishdetail(props) {
             <div></div>
         );
 }
-
-
-
 
 
 export default Dishdetail;

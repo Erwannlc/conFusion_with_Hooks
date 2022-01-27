@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import { baseUrl } from '../shared/baseUrl'
 import {  CSSTransition } from 'react-transition-group';
 
+function RenderLeader ({leader, i}) {
 
-function RenderLeader ({leader}) {
     return(
-        <div key={leader.id} className="col-12 mt-4">
-        <CSSTransition in={true} classNames="leaders" timeout={1000} appear>
-            <Media className='d-flex' style={{transitionDelay: `${150 * leader.id}ms`}}>
+        <div className="col-12 mt-4">
+        <CSSTransition in={true} classNames="leaders"  appear>
+            <Media className='d-flex' style={{transitionDelay: `${200 * i}ms`}}>
                 <Media className='flex-shrink-0'>
                     <Media object src={baseUrl + leader.image} alt={leader.name} />
                 </Media>
@@ -24,12 +24,15 @@ function RenderLeader ({leader}) {
     )
 }
 
+
 // const RenderLeaderStaggered =  setTimeout(RenderLeader, 200)
 
 function About(props) {
-    const leaders = props.leaders.leaders.map((leader) => {
+    // const [count, setCount] = useState(0)
+
+    const leaders = props.leaders.leaders.map((leader, index) => {
         return (           
-            <RenderLeader key={leader.id} leader={leader}/>
+            <RenderLeader key={leader._id} leader={leader} i={index}/>
         );
     });
 

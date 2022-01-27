@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem, Button, Modal, ModalBody, ModalHeader,Form, FormGroup, Label, Input } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
+// import { logoutUser } from '../redux/ActionsCreators';
 
 
-function Header () {
+function Header (props) {
     const [isNavOpen, setIsNavOpen] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -17,8 +18,12 @@ function Header () {
 
     function handleLogin(event) {
         toggleModal()
-        alert("Username: " + username.value + " Password: " + password + " Remember: " + remember.checked)
+        props.loginUser({username: username.value, password: password.value});
         event.preventDefault()
+    }
+
+    function handleLogout() {
+        props.logoutUser();
     }
 
     return(
@@ -50,6 +55,11 @@ function Header () {
                     </NavLink>                    
                 </NavItem>
                 <NavItem>
+                    <NavLink className="nav-link" to="/favorites">
+                        <span className="fa fa-heart fa-lg"></span> My Favorites
+                    </NavLink>
+                </NavItem>
+                <NavItem>
                     <NavLink className="nav-link" to="/contactus">
                         <span className='fa fa-adress-card fa-lg'></span> Contact us
                     </NavLink>                    
@@ -57,9 +67,26 @@ function Header () {
             </Nav>
             <Nav className='ms-auto' navbar>
                 <NavItem>
-                    <Button outline onClick={toggleModal}><span className='fa fa-sign-in fa-lg'></span>
-                        {' '} Login
-                    </Button>
+                    { !props.auth.isAuthenticated ?
+                        <Button outline onClick={toggleModal}>
+                            <span className="fa fa-sign-in fa-lg"></span> Login
+                            {props.auth.isFetching ?
+                                <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                                : null
+                            }
+                        </Button>
+                        :
+                        <div>
+                        <div className="navbar-text mr-3">{props.auth.user.username}</div>
+                        <Button outline onClick={handleLogout}>
+                            <span className="fa fa-sign-out fa-lg"></span> Logout
+                            {props.auth.isFetching ?
+                                <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                                : null
+                            }
+                        </Button>
+                        </div>
+                    }
                 </NavItem>
             </Nav>
             </Collapse>
@@ -98,9 +125,6 @@ function Header () {
                     </FormGroup>
                     <Button type="submit" color='primary'>Login</Button>
                 </Form>
-
-
-
             </ModalBody>
         </Modal>
         </>
